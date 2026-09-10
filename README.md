@@ -179,7 +179,7 @@ If you find this code helpful, please kindly cite:
 ## Acknowledgement
 STHCD uses the pretrained Stable Diffusion 2.1-base weights for runtime inference. We thank the Stable Diffusion authors and the open-source community for making the SD 2.1-base model available.
 
-This repository does not provide additional STHCD-specific training weights. Instead, it uses the official mirrored release of the Diffusers-format SD 2.1-base weights, currently configured as `ChengyxCommLab/stable-diffusion-2-1-base`.
+This repository does not provide additional STHCD-specific training weights. Instead, it uses the official mirrored release of the Diffusers-format SD 2.1-base weights, currently configured as `STHCD/stable-diffusion-2-1-base`.
 
 To download the SD 2.1-base weights, run:
 

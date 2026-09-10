@@ -15,7 +15,7 @@ from pipelines.sthcd_pipeline import STHCDPipeline
 from utils.schedule_registry import resolve_schedule_payload
 
 SD21_MODEL_IDS = [
-    "ChengyxCommLab/stable-diffusion-2-1-base",
+    "STHCD/stable-diffusion-2-1-base",
 ]
 
 

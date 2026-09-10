@@ -11,7 +11,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from utils.runtime_paths import ensure_dir, get_runtime_cache_root, resolve_huggingface_cache_paths
 from utils.runtime_warnings import suppress_optional_dependency_warnings
 
-DEFAULT_REPO_ID = "ChengyxCommLab/stable-diffusion-2-1-base"
+DEFAULT_REPO_ID = "STHCD/stable-diffusion-2-1-base"
 LOCAL_ENV_PATH = REPO_ROOT / ".env.local"
 PROXY_ENV_VARS = (
     "http_proxy",
