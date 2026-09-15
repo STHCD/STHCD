@@ -14,6 +14,7 @@ from utils.codebook import DynamicGaussianCodebookWithCache
 from utils.residual_decode import reconstruct_quantized_noise
 from utils.residual_transform import residual_restore, residual_unshuffle
 from utils.runtime_paths import resolve_codebook_cache_dir
+from utils.schedule_policy import resolve_step_value
 
 
 class SpatiotemporalHierarchyScheduler(DDPMScheduler):
@@ -85,16 +86,14 @@ class SpatiotemporalHierarchyScheduler(DDPMScheduler):
         self.index_history = []
 
     def _get_current_shuffle_config(self, step_index: int) -> int:
-        for threshold, k in self.shuffle_factor_schedule.items():
-            if step_index >= threshold:
-                return k
-        return list(self.shuffle_factor_schedule.values())[-1]
+        return resolve_step_value(
+            step_index, self.shuffle_factor_schedule, self.residual_unshuffle_factor
+        )
 
     def _get_current_channel_config(self, step_index: int) -> int:
-        for threshold, k in self.codebook_channel_schedule.items():
-            if step_index >= threshold:
-                return k
-        return list(self.codebook_channel_schedule.values())[-1]
+        return resolve_step_value(
+            step_index, self.codebook_channel_schedule, self.codebook_dims[0]
+        )
 
     def step(
         self,

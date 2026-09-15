@@ -4,6 +4,7 @@ from typing import Dict, Optional, Union
 
 from skimage.metrics import peak_signal_noise_ratio
 from torchmetrics.image.dists import DeepImageStructureAndTextureSimilarity
+from utils.schedule_policy import resolve_step_value
 from utils.schedule_registry import resolve_schedule_payload
 
 LATENT_CHANNELS = 4.0
@@ -35,13 +36,6 @@ def _parse_ratio_schedule(
     return {int(float(k) * T): int(v) for k, v in raw_map.items()}
 
 
-def _resolve_step_value(step_index: int, schedule: Dict[int, int], default_value: int) -> int:
-    for threshold, value in schedule.items():
-        if step_index >= threshold:
-            return int(value)
-    return int(list(schedule.values())[-1]) if schedule else int(default_value)
-
-
 def calculate_bpp(
     T: int = 10,
     K: Optional[int] = 256,
@@ -66,8 +60,8 @@ def calculate_bpp(
 
     total_bits = 0.0
     for step_index in range(T - 1, -1, -1):
-        current_shuffle_factor = _resolve_step_value(step_index, shuffle_schedule, residual_unshuffle_factor)
-        current_channel = _resolve_step_value(step_index, channel_schedule, codebook_channel)
+        current_shuffle_factor = resolve_step_value(step_index, shuffle_schedule, residual_unshuffle_factor)
+        current_channel = resolve_step_value(step_index, channel_schedule, codebook_channel)
         current_channel = min(current_channel, codebook_channel)
 
         step_symbols = LATENT_CHANNELS * float(current_shuffle_factor ** 2) / float(current_channel)

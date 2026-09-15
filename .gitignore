@@ -39,6 +39,8 @@ __pycache__/
 .coverage.*
 htmlcov/
 build/
+outputs/
+tests/
 dist/
 site/
 .eggs/

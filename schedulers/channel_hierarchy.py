@@ -12,6 +12,7 @@ from utils.codebook import DynamicGaussianCodebookWithCache
 from utils.residual_decode import reconstruct_quantized_noise
 from utils.residual_transform import residual_restore, residual_unshuffle
 from utils.runtime_paths import resolve_codebook_cache_dir
+from utils.schedule_policy import resolve_step_value
 
 
 class ChannelHierarchyScheduler(DDPMScheduler):
@@ -90,10 +91,9 @@ class ChannelHierarchyScheduler(DDPMScheduler):
         self.index_history = []
 
     def _get_current_channel_config(self, step_index: int) -> int:
-        for threshold, k in self.codebook_channel_schedule.items():
-            if step_index >= threshold:
-                return k
-        return list(self.codebook_channel_schedule.values())[-1]
+        return resolve_step_value(
+            step_index, self.codebook_channel_schedule, self.codebook_dims[0]
+        )
 
     def step(
         self,

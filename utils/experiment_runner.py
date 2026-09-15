@@ -772,12 +772,14 @@ def main(default_modality: str | None = None) -> None:
 
     preset_selection = _apply_rate_preset(args)
     _apply_modality_defaults(args)
+    schedule_selection = _resolve_schedule_selection(args)
     if args.num_timesteps is None:
         args.num_timesteps = 100
     if args.residual_unshuffle_factor is None:
         args.residual_unshuffle_factor = 1
     if args.codebook_channel is None:
-        args.codebook_channel = 8
+        channel_map = (schedule_selection.payload or {}).get("codebook_channel_map", {})
+        args.codebook_channel = max((int(value) for value in channel_map.values()), default=4)
     progressive_selection = _resolve_progressive_reconstruction_selection(args)
     args.save_progressive_reconstruction = progressive_selection.enabled
     args.progressive_reconstruction_interval = progressive_selection.interval
@@ -796,7 +798,6 @@ def main(default_modality: str | None = None) -> None:
     if enable_dists is None:
         enable_dists = args.modality in {"sar", "hsi"}
 
-    schedule_selection = _resolve_schedule_selection(args)
     generator = set_seed(args.seed, "cpu")
 
     schedule_suffix = "base"

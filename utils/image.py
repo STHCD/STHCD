@@ -136,8 +136,8 @@ class HSIImageDataset(Dataset):
             # Convert from HWC NumPy layout to CHW PyTorch layout.
             input_tensor = torch.from_numpy(numpy_img).permute(2, 0, 1)
         else:
-            # Fallback to the preview image when the lossless tensor is not available.
-            input_tensor = read_image(image_path).float() / 255.0
+            # read_image already maps preview pixels into [0, 1].
+            input_tensor = read_image(image_path)
 
         return {
             'image': input_tensor,
@@ -187,8 +187,8 @@ class SARImageDataset(Dataset):
                 tgt_png = read_png_uint8(image_path)
                 input_tensor = cdf_match_to_png_uint8(input_tensor, tgt_png, n_quant=2048)
         else:
-            # Fallback to the preview image when the lossless tensor is not available.
-            input_tensor = read_image(image_path).float() / 255.0
+            # read_image already maps preview pixels into [0, 1].
+            input_tensor = read_image(image_path)
 
         return {
             'image': input_tensor,
